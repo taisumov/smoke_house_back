@@ -1,8 +1,9 @@
 const Router = require('express')
 const router = new Router()
-const {About, Footer} = require('../models')
+const {About, Footer} = require('../../models')
 
-const ApiError = require('../errors/ApiError')
+const ApiError = require('../../errors/ApiError')
+const {authToken} = require("../../middleware/auth");
 
 const createResponse = async (model) => {
     let aboutFields = await model.findAll()
@@ -81,6 +82,6 @@ class AboutController {
 }
 
 const aboutController = new AboutController()
+router.post('/', authToken, aboutController.add)
 router.get('/', aboutController.getAll)
-router.post('/', aboutController.add)
 module.exports = router

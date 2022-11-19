@@ -1,8 +1,9 @@
 const Router = require('express')
 const router = new Router()
-const {Advantage} = require('../models')
+const {Advantage} = require('../../models')
 
-const ApiError = require('../errors/ApiError')
+const ApiError = require('../../errors/ApiError')
+const {authToken} = require("../../middleware/auth");
 
 class AdvantageController {
     async getAll(req, res, next) {
@@ -40,6 +41,6 @@ class AdvantageController {
 }
 
 const advantageController = new AdvantageController()
+router.post('/', authToken, advantageController.add)
 router.get('/', advantageController.getAll)
-router.post('/', advantageController.add)
 module.exports = router

@@ -1,8 +1,9 @@
 const Router = require('express')
 const router = new Router()
-const {Reason} = require('../models')
+const {Reason} = require('../../models')
 
-const ApiError = require('../errors/ApiError')
+const ApiError = require('../../errors/ApiError')
+const {authToken} = require("../../middleware/auth");
 
 class ReasonController {
     async getAll(req, res, next) {
@@ -41,6 +42,6 @@ class ReasonController {
 }
 
 const reasonController = new ReasonController()
+router.post('/', authToken, reasonController.add)
 router.get('/', reasonController.getAll)
-router.post('/', reasonController.add)
 module.exports = router

@@ -1,8 +1,9 @@
 const Router = require('express')
 const router = new Router()
-const {Footer} = require('../models')
+const {Footer} = require('../../models')
 
-const ApiError = require('../errors/ApiError')
+const ApiError = require('../../errors/ApiError')
+const {authToken} = require("../../middleware/auth");
 
 class FooterController {
     async getAll(req, res, next) {
@@ -64,6 +65,6 @@ class FooterController {
 }
 
 const footerController = new FooterController()
+router.post('/', authToken, footerController.add)
 router.get('/', footerController.getAll)
-router.post('/', footerController.add)
 module.exports = router

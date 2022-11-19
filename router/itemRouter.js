@@ -4,20 +4,19 @@ const slug = require('slug')
 const {Item, Image, Parameters, Features, Extra} = require('../itemModels')
 
 const ApiError = require('../errors/ApiError')
+const {authToken} = require("../middleware/auth");
 
 class itemController {
 
     async create(req, res, next) {
         try {
-            const {category, name, images, video, parameters, material, features, extra_slugs} = req.body
+            const {category, name, images, video, parameters, material, features, extra_slugs, price, visible} = req.body
             if(name !== undefined && name.length < 3) return next(ApiError.forbidden('Некорректное имя'))
             const slugName = slug(name)
             const isSlug = await Item.findOne({where: {slug: slugName}})
             if (!!isSlug) return next(ApiError.forbidden('Смените имя, чтобы товар можно было однозначно определить (имя повторяется)'))
             let parametersItems = []
 
-            await Item.create()
-                .then(
             parameters.map(one_param => parametersItems.push({
                 name: one_param.name,
                 options: [
@@ -25,13 +24,16 @@ class itemController {
                     one_param.second_opt,
                     one_param.third_opt,
                 ].filter(item => item !== undefined)
-            })))
+            }))
+
             const item = await Item.create({
                 name,
                 slug: slugName,
                 video,
                 material,
-                category
+                category,
+                price,
+                visible
             })
 
             if (item) {
@@ -100,6 +102,32 @@ class itemController {
         return res.status(200).json(item)
     }
 
+    async getCategoryShort(req, res, next) {
+
+        let {category} = req.body
+        let items = await Item.findAll({
+            where: category === 'all' ? {} : {category},
+            order: [['createdAt', 'ASC']],
+            include: [
+                {model: Image, as: Item.images},
+                {model: Parameters, as: Item.params},
+                {model: Features, as: Item.features},
+                {model: Extra, as: Item.extra_slug},
+            ]
+        })
+
+        items = items.map(item => {
+            return {
+                name: item.name,
+                category: item.category,
+                slug: item.slug,
+                cover: item.images[0] || '',
+                price: item.price
+            }
+        })
+        return res.status(200).json(items)
+    }
+
     async getAllShort(req, res, next) {
         let items = await Item.findAll({
             where: {},
@@ -114,6 +142,7 @@ class itemController {
 
         items = items.map(item => {
             return {
+                category: item.category,
                 name: item.name,
                 slug: item.slug,
                 cover: item.images[0] || ''
@@ -137,51 +166,49 @@ class itemController {
     }
 
     async editBySlug(req, res, next) {
-        let {slugName} = req.params
-        let changeFields = req.body
-        let item = Item.findOne({where: {slug: slugName}})
-
-        if(changeFields.name !== undefined) {
-            let slugToChange = slug(changeFields.name)
-            if (slugToChange !== null) return next(ApiError.forbidden("Такой товар уже существует!"))
-            changeFields.slug = slugToChange
+        const {category, name, images, video, parameters, material, features, extra_slugs, price, checkSlug, visible} = req.body
+        let oldItem = await Item.findOne({where: {slug: checkSlug}})
+        let slugName = checkSlug
+        if(name !== undefined) {
+            let slugToChange = slug(name)
+            let checkItem = await Item.findOne({where: {slug: slugToChange}})
+            if (checkItem && checkItem.slug !== checkSlug) return next(ApiError.forbidden("Такой название товара уже существует!"))
+            slugName = slugToChange
         }
 
-        if (changeFields.extra_slug !== undefined) {
-            await Extra.destroy({where: {itemId: item.id}})
-            await Promise.all(
-                Array.from(changeFields.extra_slug).map(slug => {
-                    let checkSlug = Item.findOne({where: {slug}})
-                    if (checkSlug !== null) {
-                        Extra.create({
-                            extra_slug: slug,
-                            itemId: item.id
-                        })
-                    }
-                })
-            )
-            delete changeFields.extra_slug
+        let result = await Item.destroy({where: {slug: checkSlug}, cascade: true})
+        if (!!result) {
+            await Extra.destroy({where: {extra_slug: checkSlug}})
+            await Image.destroy({where: {itemId: oldItem.id}})
+            await Extra.destroy({where: {itemId: oldItem.id}})
+            await Parameters.destroy({where: {itemId: oldItem.id}})
+            await Features.destroy({where: {itemId: oldItem.id}})
         }
 
-        if (changeFields.features !== undefined) {
-            await Features.destroy({where: {itemId: item.id}})
-            await Promise.all(
-                Array.from(changeFields.features).map(feature => {
-                    Features.create({
-                        header: feature.header,
-                        main_text: feature.main_text,
-                        circle_text: feature.circle_text,
-                        itemId: item.id
-                    })
-                })
-            )
-            delete changeFields.features
-        }
+        let parametersItems = []
 
-        if (changeFields.features !== undefined) {
-            await Parameters.destroy({where: {itemId: item.id}})
+        parameters.map(one_param => parametersItems.push({
+            name: one_param.name,
+            options: [
+                one_param.first_opt,
+                one_param.second_opt,
+                one_param.third_opt,
+            ].filter(item => item !== undefined)
+        }))
+
+        const item = await Item.create({
+            name,
+            slug: slugName,
+            video,
+            material,
+            category,
+            price,
+            visible: !!visible
+        })
+
+        if (item) {
             await Promise.all(
-                Array.from(changeFields.params).map(param => {
+                Array.from(parametersItems).map(param => {
                     return Parameters.create({
                         name: param.name,
                         first_opt: param.options[0],
@@ -191,14 +218,41 @@ class itemController {
                     })
                 })
             )
-            delete changeFields.features
+
+            await Promise.all(
+                Array.from(images).map(image => {
+                    Image.create({
+                        src: image,
+                        itemId: item.id
+                    })
+                })
+            )
+
+            await Promise.all(
+                Array.from(features).map(feature => {
+                    Features.create({
+                        header: feature.header,
+                        main_text: feature.main_text,
+                        circle_text: feature.circle_text,
+                        itemId: item.id
+                    })
+                })
+            )
+
+            await Promise.all(
+                Array.from(extra_slugs).map(slug => {
+                    let checkSlug = Item.findOne({where: {slug}})
+                    if (checkSlug !== null) {
+                        Extra.create({
+                            extra_slug: slug,
+                            itemId: item.id
+                        })
+                    }
+                })
+            )
         }
 
-        await Item.update(
-            changeFields,
-            {where: {slug: slugName}}
-        )
-        return res.status(200).json(228)
+        return res.status(200).json(item)
     }
 
     async deleteAll(req, res, next) {
@@ -225,6 +279,7 @@ class itemController {
         console.log(itemToDelete)
         let result = await Item.destroy({where: {slug: slugName}, cascade: true})
         if (!!result) {
+            await Extra.destroy({where: {extra_slug: slugName}})
             await Image.destroy({where: {itemId: itemToDelete.id}})
             await Extra.destroy({where: {itemId: itemToDelete.id}})
             await Parameters.destroy({where: {itemId: itemToDelete.id}})
@@ -233,16 +288,49 @@ class itemController {
         return res.status(!!result ? 200 : 403).json("OK")
     }
 
+    async getCatalog(req, res, next) {
+        let items = await Item.findAll({
+            where: {},
+            order: [['createdAt', 'ASC']],
+            include: [
+                {model: Image, as: Item.images},
+                {model: Parameters, as: Item.params},
+                {model: Features, as: Item.features},
+                {model: Extra, as: Item.extra_slug},
+            ]
+        })
+
+        console.log(items[0])
+
+        let result = {}
+        for (let item of items) {
+            console.log(item.category)
+            if(item.category !== undefined) {
+                if (result[item.category] === undefined) {
+                    result[item.category] = []
+                }
+                // console.log(item)
+                result[item.category].push(item)
+            }
+        }
+
+        console.log(result)
+
+
+        return res.status(200).json(result)
+    }
 }
 
 let controller = new itemController()
 
-router.post('/create', controller.create)
+router.post('/create', authToken, controller.create)
+router.post('/all/get/category', controller.getCategoryShort)
+router.post('/edit', authToken, controller.editBySlug)
+router.delete('/delete/:slugName', authToken, controller.deleteBySlug)
+router.delete('/all/delete', authToken, controller.deleteAll)
 router.get('/get/:slugName', controller.getBySlug)
 router.get('/all/get/short', controller.getAllShort)
 router.get('/all/get/full', controller.getAll)
-router.patch('/edit', controller.editBySlug)
-router.delete('/delete/:slugName', controller.deleteBySlug)
-router.delete('/all/delete', controller.deleteAll)
+router.get('/all/get/catalog', controller.getCatalog)
 
 module.exports = router

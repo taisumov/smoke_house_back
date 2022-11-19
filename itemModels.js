@@ -7,8 +7,9 @@ const Item = sequelize.define('item', {
     name: {type: DataTypes.STRING, defaultValue: '', notNull: true},
     slug: {type: DataTypes.STRING, defaultValue: '', notNull: true, unique: true},
     video: {type: DataTypes.STRING, defaultValue: '', notNull: false},
-    material: {type: DataTypes.STRING, defaultValue: '', notNull: false},
+    material: {type: DataTypes.STRING(2048), defaultValue: '', notNull: false},
     price: {type: DataTypes.STRING, defaultValue: '', notNull: false},
+    visible: {type: DataTypes.BOOLEAN, defaultValue: true}
 })
 
 const Image = sequelize.define('image', {
@@ -27,7 +28,7 @@ const Parameters = sequelize.define('params', {
 const Features = sequelize.define('features', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     header: {type: DataTypes.STRING, defaultValue: '', notNull: true},
-    main_text: {type: DataTypes.STRING, defaultValue: ''},
+    main_text: {type: DataTypes.STRING(2048), defaultValue: ''},
     circle_text: {type: DataTypes.STRING, defaultValue: ''},
 })
 

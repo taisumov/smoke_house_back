@@ -1,8 +1,9 @@
 const Router = require('express')
 const router = new Router()
-const {FormOrder} = require('../models')
+const {FormOrder} = require('../../models')
 
-const ApiError = require('../errors/ApiError')
+const ApiError = require('../../errors/ApiError')
+const {authToken} = require("../../middleware/auth");
 
 class FormOrderController {
     async add(req, res, next) {
@@ -43,6 +44,6 @@ class FormOrderController {
 }
 
 const formOrderController = new FormOrderController()
+router.post('/upload', authToken, formOrderController.add)
 router.get('/get', formOrderController.getAll)
-router.post('/upload', formOrderController.add)
 module.exports = router

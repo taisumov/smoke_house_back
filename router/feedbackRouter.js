@@ -3,6 +3,7 @@ const router = new Router()
 const {Feedback} = require('../models')
 
 const ApiError = require('../errors/ApiError')
+const {authToken} = require("../middleware/auth");
 
 class FeedbackController {
     async getAll(req, res, next) {
@@ -52,6 +53,6 @@ class FeedbackController {
 }
 
 const feedbackController = new FeedbackController()
+router.post('/', authToken, feedbackController.add)
 router.get('/', feedbackController.getAll)
-router.post('/', feedbackController.add)
 module.exports = router

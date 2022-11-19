@@ -1,8 +1,9 @@
 const Router = require('express')
 const router = new Router()
-const {Video} = require('../models')
+const {Video} = require('../../models')
 
-const ApiError = require('../errors/ApiError')
+const ApiError = require('../../errors/ApiError')
+const {authToken} = require("../../middleware/auth");
 
 class VideoController {
     async upload(req, res, next) {
@@ -55,8 +56,8 @@ class VideoController {
 
 const videoController = new VideoController()
 
-router.post('/upload', videoController.upload)
-router.post('/main', videoController.addMain)
+router.post('/upload', authToken, videoController.upload)
+router.post('/main', authToken, videoController.addMain)
 router.get('/main', videoController.getMain)
 
 module.exports = router

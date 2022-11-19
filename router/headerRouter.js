@@ -3,6 +3,7 @@ const router = new Router()
 const {Header} = require('../models')
 
 const ApiError = require('../errors/ApiError')
+const {authToken} = require("../middleware/auth");
 
 const modelGetAll = async (model) => {
     let headerInfo = await model.findAll()
@@ -40,7 +41,7 @@ class HeaderController {
 
 const headerController = new HeaderController()
 
+router.post('/', authToken, headerController.update)
 router.get('/', headerController.getHeader)
-router.post('/', headerController.update)
 
 module.exports = router
