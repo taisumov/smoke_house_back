@@ -8,8 +8,8 @@ jobs:
     runs-on: [ubuntu-latest]
     env:
       TOKEN: ${{ secrets.DOCKER_TOKEN }}
-      LOGIN: ${{ variables.DOCKER_LOGIN }}
-      IMAGE: ${{ variables.DOCKER_IMAGE }}
+      LOGIN: ${{ secrets.DOCKER_LOGIN }}
+      IMAGE: ${{ secrets.DOCKER_IMAGE }}
     steps:
       - name: Login to docker
         run: echo $TOKEN | docker login -u $LOGIN --password-stdin
