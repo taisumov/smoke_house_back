@@ -5,6 +5,7 @@ const {Item, Image, Parameters, Features, Extra} = require('../itemModels')
 
 const ApiError = require('../errors/ApiError')
 const {authToken} = require("../middleware/auth");
+const fs = require("fs");
 
 class itemController {
 
@@ -88,6 +89,7 @@ class itemController {
     }
 
     async getBySlug(req, res, next) {
+        const isAllowed = res.locals.isauth
         let {slugName} = req.params
         let item = await Item.findOne({
             where: {slug: slugName},
@@ -99,14 +101,14 @@ class itemController {
                 {model: Extra, as: Item.extra_slug},
             ]
         })
-        return res.status(200).json(item)
+        return res.status(200).json(!isAllowed ? (!!item.visible ? item : null) : item)
     }
 
     async getCategoryShort(req, res, next) {
-
+        const isAllowed = res.locals.isauth
         let {category} = req.body
         let items = await Item.findAll({
-            where: category === 'all' ? {} : {category},
+            where: category === 'all' ? !isAllowed ? {visible: true} : {} : !isAllowed ? {visible: true, category} : {category},
             order: [['createdAt', 'ASC']],
             include: [
                 {model: Image, as: Item.images},
@@ -129,8 +131,9 @@ class itemController {
     }
 
     async getAllShort(req, res, next) {
+        const isAllowed = res.locals.isauth
         let items = await Item.findAll({
-            where: {},
+            where: !isAllowed ? {visible: true} : {},
             order: [['createdAt', 'ASC']],
             include: [
                 {model: Image, as: Item.images},
@@ -152,8 +155,9 @@ class itemController {
     }
 
     async getAll(req, res, next) {
+        const isAllowed = res.locals.isauth
         let items = await Item.findAll({
-            where: {},
+            where: !isAllowed ? {visible: true} : {},
             order: [['createdAt', 'ASC']],
             include: [
                 {model: Image, as: Item.images},
@@ -276,7 +280,17 @@ class itemController {
                 {model: Extra, as: Item.extra_slug},
             ]
         })
-        console.log(itemToDelete)
+
+        itemToDelete.images.map((item) => {
+            fs.unlink(`${item}`, function(err){
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log("Файл удалён");
+                }
+            });
+        })
+
         let result = await Item.destroy({where: {slug: slugName}, cascade: true})
         if (!!result) {
             await Extra.destroy({where: {extra_slug: slugName}})
@@ -289,8 +303,9 @@ class itemController {
     }
 
     async getCatalog(req, res, next) {
+        const isAllowed = res.locals.isauth
         let items = await Item.findAll({
-            where: {},
+            where: !isAllowed ? {visible: true} : {},
             order: [['createdAt', 'ASC']],
             include: [
                 {model: Image, as: Item.images},
@@ -299,8 +314,6 @@ class itemController {
                 {model: Extra, as: Item.extra_slug},
             ]
         })
-
-        console.log(items[0])
 
         let result = {}
         for (let item of items) {

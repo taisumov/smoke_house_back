@@ -1,6 +1,6 @@
 const Router = require('express')
 const router = new Router()
-const {FormOrder} = require('../../models')
+const {FormOrder, Visibility} = require('../../models')
 
 const ApiError = require('../../errors/ApiError')
 const {authToken} = require("../../middleware/auth");
@@ -24,6 +24,9 @@ class FormOrderController {
     }
     async getAll(req, res, next) {
         try {
+            const isAllowed = res.locals.isauth
+            const isVisible = await Visibility.findOne({where: {name: 'form_order'}})
+
             let formOrderFields = await FormOrder.findAll()
             let email_send = ''
             let arrNames = formOrderFields.map(item => {
@@ -33,10 +36,15 @@ class FormOrderController {
                     email_send = item.name
                 }
             })
-            return res.status(200).json({
-                names: arrNames.filter(el => el != null),
-                email: email_send
-            })
+
+            if (isAllowed || isVisible) {
+                return res.status(200).json({
+                    names: arrNames.filter(el => el != null),
+                    email: email_send
+                })
+            } else {
+                return res.status(200).json(undefined)
+            }
         } catch (e) {
             return next(ApiError.badRequest(e.message))
         }

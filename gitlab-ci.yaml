@@ -1,0 +1,11 @@
+stages:
+  - build
+
+build:
+  stage: build
+  image: docker:18-git
+  services:
+    - docker:18-dind
+  script:
+    - docker login -u $DOCKER_USER -p $DOCKER_TOKEN
+    - docker build -t $docker buildx build --push --build-arg LOGIN=$DOCKER_USER -t $DOCKER_USER/$DOCKER_IMAGE:1.0 -t $DOCKER_USER/$DOCKER_IMAGE:latest .

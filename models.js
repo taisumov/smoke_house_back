@@ -4,7 +4,7 @@ const {DataTypes} = require('sequelize')
 const Header = sequelize.define('header', {
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     name: {type: DataTypes.STRING, defaultValue: '', notNull: false},
-    data: {type: DataTypes.STRING(2048), defaultValue: '', notNull: false}
+    data: {type: DataTypes.STRING(2048), defaultValue: '', notNull: false},
 })
 
 const Video = sequelize.define('video_item', {
@@ -107,20 +107,20 @@ const initHeader = async () => {
 
 const initAdvantages = async () => {
     await Advantage.create({
-        main_photo: 'a568fb3a-f29f-438f-b4c4-724589f1696d.jpg',
-        extra_photo: 'a568fb3a-f29f-438f-b4c4-724589f1696d.jpg',
+        main_photo: '1.jpg',
+        extra_photo: '1.jpg',
         title: 'Заголовок',
         description: 'Описание',
     })
     await Advantage.create({
-        main_photo: 'a568fb3a-f29f-438f-b4c4-724589f1696d.jpg',
-        extra_photo: 'a568fb3a-f29f-438f-b4c4-724589f1696d.jpg',
+        main_photo: '1.jpg',
+        extra_photo: '1.jpg',
         title: 'Заголовок',
         description: 'Описание',
     })
     await Advantage.create({
-        main_photo: 'a568fb3a-f29f-438f-b4c4-724589f1696d.jpg',
-        extra_photo: 'a568fb3a-f29f-438f-b4c4-724589f1696d.jpg',
+        main_photo: '1.jpg',
+        extra_photo: '1.jpg',
         title: 'Заголовок',
         description: 'Описание',
     })
@@ -129,137 +129,137 @@ const initAdvantages = async () => {
 const initTechs = async () => {
     await Technology.create({
         src: '',
-        title: '12345678',
-        description: 'dshsfhdfhghd',
+        title: 'Заголовок',
+        description: 'Текст',
         is_video: false
     })
     await Technology.create({
         src: '',
-        title: '12345678',
-        description: 'dshsfhdfhghd',
+        title: 'Заголовок',
+        description: 'Текст',
         is_video: false
     })
     await Technology.create({
         src: '',
-        title: '12345678',
-        description: 'dshsfhdfhghd',
+        title: 'Заголовок',
+        description: 'Текст',
         is_video: false
     })
     await Technology.create({
         src: '',
-        title: '12345678',
-        description: 'dshsfhdfhghd',
+        title: 'Заголовок',
+        description: 'Текст',
         is_video: false
     })
     await Technology.create({
         src: '',
-        title: '12345678',
-        description: 'dshsfhdfhghd',
+        title: 'Заголовок',
+        description: 'Текст',
         is_video: false
     })
     await Technology.create({
         src: '',
-        title: '12345678',
-        description: 'dshsfhdfhghd',
+        title: 'Заголовок',
+        description: 'Текст',
         is_video: false
     })
     await Technology.create({
         src: '',
-        title: '12345678',
-        description: 'dshsfhdfhghd',
+        title: 'Заголовок',
+        description: 'Текст',
         is_video: false
     })
     await Technology.create({
         src: '',
-        title: '12345678',
-        description: 'dshsfhdfhghd',
+        title: 'Заголовок',
+        description: 'Текст',
         is_video: false
     })
     await Technology.create({
-        src: '123gertwtwtwet',
-        title: '',
-        description: '',
+        src: 'videoURL',
+        title: 'Заголовок',
+        description: 'Текст',
         is_video: true
     })
 }
 
 const initDelivery = async() => {
     await Delivery.create({
-        header: 'sdfsfadsfsfaf',
+        header: 'Заголовок',
         type: 'text',
-        value: 'dsdfgsdfgrwwerte'
+        value: 'Текст'
     })
     await Delivery.create({
-        header: 'sdfsfadsfsfaf',
+        header: 'Заголовок',
         type: 'text',
-        value: 'dsdfgsdfgrwwerte'
+        value: 'Текст'
     })
     await Delivery.create({
-        header: 'sdfsfadsfsfaf',
+        header: 'Заголовок',
         type: 'text',
-        value: 'dsdfgsdfgrwwerte'
+        value: 'Текст'
     })
     await Delivery.create({
-        header: 'sdfsfadsfsfaf',
+        header: 'Заголовок',
         type: 'text',
-        value: 'dsdfgsdfgrwwerte'
+        value: 'Текст'
     })
     await Delivery.create({
-        header: 'sdfsfadsfsfaf',
+        header: 'Заголовок',
         type: 'text',
-        value: 'dsdfgsdfgrwwerte'
+        value: 'Текст'
     })
     await Delivery.create({
-        header: 'sdfsfadsfsfaf',
-        type: 'video',
-        value: 'dsdfgsdfgrwwerte'
+        header: 'Заголовок',
+        type: 'text',
+        value: 'Текст'
     })
     await Delivery.create({
-        header: 'sdfsfadsfsfaf',
-        type: 'video',
-        value: 'dsdfgsdfgrwwerte'
+        header: 'Заголовок',
+        type: 'text',
+        value: 'Текст'
     })
     await Delivery.create({
-        header: 'sdfsfadsfsfaf',
-        type: 'video',
-        value: 'dsdfgsdfgrwwerte'
+        header: 'Заголовок',
+        type: 'text',
+        value: 'Текст'
     })
 }
 
 const initReasons = async() => {
     await Reason.create({
-        title: 'sdfsfasdfa',
-        description: 'sdfsdfsdfsdf',
+        title: 'Причина',
+        description: 'Описание',
         color: 'fff',
         img: ''
     })
     await Reason.create({
-        title: 'sdfsfasdfa',
-        description: 'sdfsdfsdfsdf',
+        title: 'Причина',
+        description: 'Описание',
         color: 'fff',
         img: ''
     })
     await Reason.create({
-        title: 'sdfsfasdfa',
-        description: 'sdfsdfsdfsdf',
+        title: 'Причина',
+        description: 'Описание',
         color: 'fff',
         img: ''
     })
     await Reason.create({
-        title: 'sdfsfasdfa',
-        description: 'sdfsdfsdfsdf',
+        title: 'Причина',
+        description: 'Описание',
         color: 'fff',
         img: ''
     })
     await Reason.create({
-        title: 'sdfsfasdfa',
-        description: 'sdfsdfsdfsdf',
+        title: 'Причина',
+        description: 'Описание',
         color: 'fff',
         img: ''
     })
     await Reason.create({
-        title: 'sdfsfasdfa',
-        description: 'sdfsdfsdfsdf',
+        title: 'Причина',
+        description: 'Описание',
         color: 'fff',
         img: ''
     })
@@ -267,27 +267,27 @@ const initReasons = async() => {
 
 const initProd = async() => {
     await ProductionInfo.create({
-        title: 'ddsfgsdfgsdg',
+        title: 'Первый пункт',
         src: ''
     })
     await ProductionInfo.create({
-        title: 'ddsfgsdfgsdg',
+        title: 'Второй пункт',
         src: ''
     })
     await ProductionInfo.create({
-        title: 'ddsfgsdfgsdg',
+        title: 'Третий пункт',
         src: ''
     })
     await ProductionInfo.create({
-        title: 'ddsfgsdfgsdg',
+        title: 'Четвертый пункт',
         src: ''
     })
     await ProductionInfo.create({
-        title: 'ddsfgsdfgsdg',
+        title: 'Пятый пункт',
         src: ''
     })
     await ProductionInfo.create({
-        title: 'ddsfgsdfgsdg',
+        title: 'Шестой пункт',
         src: ''
     })
 }
@@ -297,7 +297,7 @@ const initAboutFirst = async() => {
     await About.create({src: '', is_src_text: false})
     await About.create({src: '', is_src_text: false})
     await About.create({src: '', is_src_text: false})
-    await About.create({src: 'sdagasfadsfsf', is_src_text: true})
+    await About.create({src: 'О нас', is_src_text: true})
 }
 
 const initUsers = async() => {
@@ -343,6 +343,10 @@ const initVisibility = async() => {
         name: 'main_video',
         visible: true
     })
+    await Visibility.create({
+        name: 'form_order',
+        visible: true
+    })
 }
 
 module.exports = {
@@ -360,6 +364,7 @@ module.exports = {
     Technology,
     User,
     Delivery,
+    Visibility,
     initHeader,
     initAdvantages,
     initTechs,

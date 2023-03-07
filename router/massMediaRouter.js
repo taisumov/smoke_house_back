@@ -7,7 +7,6 @@ const ApiError = require('../errors/ApiError')
 class MassMediaController {
     async getAll(req, res, next) {
         try {
-            console.log(123)
             let massMediaArray = await MassMedia.findAll()
             let photoArray = massMediaArray.filter(item => item.type === 'photo').map(item => {
                 return {

@@ -8,7 +8,6 @@ const {authToken} = require("../../middleware/auth");
 class ReasonController {
     async getAll(req, res, next) {
         try {
-            console.log(123)
             let reasonArray = await Reason.findAll()
             return res.status(200).json(reasonArray)
         } catch (e) {

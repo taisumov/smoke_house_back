@@ -23,7 +23,7 @@ class MediaController {
         try {
             const {img} = req.body
             console.log(img)
-            fs.unlinkSync(path.resolve(__dirname, '..', 'static', img))
+            fs.unlinkSync(path.resolve(__dirname, '..', '..', 'static', img))
             return res.status(200).json('Удаление прошло успешно!')
         } catch (e) {
             return next(ApiError.badRequest(e.message))

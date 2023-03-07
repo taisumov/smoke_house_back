@@ -9,7 +9,7 @@ const genAccessToken = (username, password) => {
             'password': password
         },
         process.env.TOKEN_SECRET,
-        {expiresIn: '1800s'}
+        {expiresIn: '730h'}
     )
 }
 
@@ -20,17 +20,28 @@ const authToken = (req, res, next) => {
 
     try {
         const token = req.headers.authorization.split(' ')[1]
-        console.log(token)
         if (!token)
             return res.status(401).json("Пользователь не авторизован")
         req.user = jwt.verify(token, process.env.TOKEN_SECRET)
         next()
     } catch (e) {
-        res.status(401).json("Пользователь не авторизован")
+        res.status(401).json("Пользователь не авторизован, повторите снова")
+    }
+}
+
+const isAuthUser = (req, res, next) => {
+    try {
+        const token = `${req.headers.authorization}`.split(' ')[1]
+        res.locals.isauth = !!token
+        next()
+    } catch (e) {
+        res.locals.isauth = false
+        next()
     }
 }
 
 module.exports = {
     genAccessToken,
-    authToken
+    authToken,
+    isAuthUser
 }

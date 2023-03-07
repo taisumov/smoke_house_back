@@ -7,6 +7,7 @@ const ApiError = require('../errors/ApiError')
 class TechController {
     async getAll(req, res, next) {
         try {
+            console.log(123333333)
             let techInfo = await Technology.findAll()
             let video = techInfo.find(item => item.is_video)?.src
             let techs = techInfo.filter(item => !item.is_video).map(item => {

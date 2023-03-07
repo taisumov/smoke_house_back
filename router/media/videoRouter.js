@@ -1,6 +1,6 @@
 const Router = require('express')
 const router = new Router()
-const {Video} = require('../../models')
+const {Video, Visibility} = require('../../models')
 
 const ApiError = require('../../errors/ApiError')
 const {authToken} = require("../../middleware/auth");
@@ -23,8 +23,16 @@ class VideoController {
 
     async getMain(req, res, next) {
         try {
+            const isAllowed = res.locals.isauth
+            const isVisible = await Visibility.findOne({where: {name: 'main_video'}})
+
             const videoItem = await Video.findOne({where: {name: 'main'}})
-            return res.status(200).json(videoItem.src)
+
+            if (isAllowed || (videoItem && isVisible)) {
+                return res.status(200).json(videoItem?.src)
+            } else {
+                return res.status(200).json(undefined)
+            }
         }
         catch (e) {
             return next(ApiError.badRequest(e.message))

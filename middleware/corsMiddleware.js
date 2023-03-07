@@ -1,5 +1,4 @@
 module.exports = (req, res, next) => {
-    console.log(123)
     if (req.headers.origin) {
         res.setHeader(
             "Access-Control-Allow-Origin", req.headers.origin
