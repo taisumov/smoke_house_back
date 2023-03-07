@@ -15,4 +15,4 @@ jobs:
         run: echo $TOKEN | docker login -u $LOGIN --password-stdin
       - uses: actions/checkout@master
       - name: Build & push image
-        run: docker buildx build --push --build-arg LOGIN=$LOGIN -t $LOGIN/$IMAGE:$(cat ./version) -t $LOGIN/$IMAGE:latest .
+        run: docker buildx build --push --build-arg LOGIN=$LOGIN -t $LOGIN/$IMAGE:1.0 -t $LOGIN/$IMAGE:latest .
