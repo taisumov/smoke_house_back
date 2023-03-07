@@ -1,0 +1,18 @@
+name: CI
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build_and_pub:
+    runs-on: [ubuntu-latest]
+    env:
+      TOKEN: ${{ secrets.DOCKER_TOKEN }}
+      LOGIN: ${{ secrets.DOCKER_LOGIN }}
+      IMAGE: ${{ secrets.DOCKER_IMAGE }}
+    steps:
+      - name: Login to docker
+        run: echo $TOKEN | docker login -u $LOGIN --password-stdin
+      - uses: actions/checkout@master
+      - name: Build & push image
+        run: docker buildx build --push --build-arg LOGIN=$LOGIN -t $LOGIN/$IMAGE:$(cat ./version) -t $LOGIN/$IMAGE:latest .
