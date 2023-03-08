@@ -12,7 +12,6 @@ jobs:
       IMAGE: ${{ secrets.DOCKER_IMAGE }}
       SSH_USER: ${{secrets.SSH_USER}}
       SSH_HOST: ${{secrets.SSH_HOST}}
-      #      SSH_KEY_PATH: ${{ github.workspace }}/../private.key
       SSH_KEY_PATH: ~/.ssh/id_rsa
     steps:
       - name: Login to docker
@@ -26,7 +25,4 @@ jobs:
           install -m 600 -D /dev/null ~/.ssh/id_rsa
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           ssh-keyscan -H $SSH_HOST > ~/.ssh/known_hosts
-          ssh -i $SSH_KEY_PATH $SSH_USER@$SSH_HOST "cd project && docker compose rm -s -f backend && sleep 1 && docker rmi $LOGIN/$IMAGE && docker compose up -d backend && docker compose restart"
-#          ssh -i $SSH_KEY_PATH $SSH_USER@$SSH_HOST "docker rmi $LOGIN/$IMAGE"
-#          ssh -i $SSH_KEY_PATH $SSH_USER@$SSH_HOST "docker compose up -d backend"
-#          ssh -i $SSH_KEY_PATH $SSH_USER@$SSH_HOST "docker compose restart"
+          ssh -i $SSH_KEY_PATH $SSH_USER@$SSH_HOST "cd project && docker compose stop backend && docker compose rm -s backend && docker rmi $LOGIN/$IMAGE && docker compose up -d backend && docker compose restart"
