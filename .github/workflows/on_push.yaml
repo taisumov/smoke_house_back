@@ -24,11 +24,9 @@ jobs:
       - name: Work on server
         run: |
           mkdir -p ~/.ssh/
-          echo $SSH_PRIVATE_KEY
           echo $SSH_PRIVATE_KEY > ../private.key
           sudo chmod 600 $SSH_KEY_PATH
           echo $SSH_KNOWN_HOSTS > ~/.ssh/known_hosts
-          cat $SSH_KEY_PATH
           ssh -i $SSH_KEY_PATH $SSH_USER@$SSH_HOST "docker compose rm -s -f backend"
           ssh -i $SSH_KEY_PATH $SSH_USER@$SSH_HOST "docker rmi $LOGIN/$IMAGE"
           ssh -i $SSH_KEY_PATH $SSH_USER@$SSH_HOST "docker compose up -d backend"
