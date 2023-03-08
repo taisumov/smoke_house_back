@@ -18,6 +18,32 @@ const loginRouter = require('./auth/loginRouter')
 const mailRouter = require('./mailing/mailRouter')
 const deliveryRouter = require('./deliveryRouter')
 const {isAuthUser} = require("../middleware/auth");
+const {
+    initHeader,
+    initAdvantages,
+    initTechs,
+    initDelivery,
+    initReasons,
+    initProd,
+    initAboutFirst,
+    initUsers,
+    initForms,
+    initVisibility
+} = require("../models");
+
+router.use('/init_db', async (req, res, next) => {
+    await initHeader()
+    await initAdvantages()
+    await initTechs()
+    await initDelivery()
+    await initReasons()
+    await initProd()
+    await initAboutFirst()
+    await initUsers()
+    await initForms()
+    await initVisibility()
+    return res.status(200).json("Готово!")
+})
 
 router.use('/item', isAuthUser, itemRouter)
 router.use('/header', isAuthUser, headerRouter)

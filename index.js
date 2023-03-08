@@ -44,16 +44,6 @@ app.use(errorHandler)
 const start = async () => {
     await sequelize.authenticate()
     await sequelize.sync()
-    // await initHeader()
-    // await initAdvantages()
-    // await initTechs()
-    // await initDelivery()
-    // await initReasons()
-    // await initProd()
-    // await initAboutFirst()
-    // await initUsers()
-    // await initForms()
-    // await initVisibility()
     app.listen(process.env.PORT)
 }
 
