@@ -23,7 +23,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use('/api', router)
-app.use('/media', express.static('media'))
+app.use('/static', express.static('static'))
 app.post('/token', (req, res, next) => {
     if(req.method !== "OPTIONS") {
         try {

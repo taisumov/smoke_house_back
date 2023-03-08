@@ -32,16 +32,16 @@ const {
 } = require("../models");
 
 router.use('/init_db', async (req, res, next) => {
-    await initHeader()
-    await initAdvantages()
-    await initTechs()
-    await initDelivery()
-    await initReasons()
-    await initProd()
-    await initAboutFirst()
-    await initUsers()
-    await initForms()
-    await initVisibility()
+    // await initHeader()
+    // await initAdvantages()
+    // await initTechs()
+    // await initDelivery()
+    // await initReasons()
+    // await initProd()
+    // await initAboutFirst()
+    // await initUsers()
+    // await initForms()
+    // await initVisibility()
     return res.status(200).json("Готово!")
 })
 
@@ -61,6 +61,6 @@ router.use('/tech', isAuthUser, techRouter)
 router.use('/login', isAuthUser, loginRouter)
 router.use('/mail', isAuthUser, mailRouter)
 router.use('/delivery', isAuthUser, deliveryRouter)
-router.use('/media', isAuthUser, mediaRouter)
+router.use('/static', isAuthUser, mediaRouter)
 
 module.exports = router
