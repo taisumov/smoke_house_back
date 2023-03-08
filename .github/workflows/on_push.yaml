@@ -24,6 +24,7 @@ jobs:
       - name: Work on server
         run: |
           mkdir -p ~/.ssh/
+          echo $SSH_PRIVATE_KEY
           echo $SSH_PRIVATE_KEY > ../private.key
           sudo chmod 600 $SSH_KEY_PATH
           echo $SSH_KNOWN_HOSTS > ~/.ssh/known_hosts
