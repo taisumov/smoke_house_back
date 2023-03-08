@@ -31,11 +31,11 @@ const {
     initVisibility, User
 } = require("../models");
 
-router.use('/init_db', isAuthUser, async (req, res, next) => {
-
-    const user = await User.findOne({where: {username: 'admin'}})
-
+router.get('/init_db', async (req, res, next) => {
+    const user = await User.findOne({where: {}})
     if (user) {
+        return res.status(400).json('Не получилось инициализировать БД...')
+    } else {
         await initHeader()
         await initAdvantages()
         await initTechs()
@@ -46,8 +46,8 @@ router.use('/init_db', isAuthUser, async (req, res, next) => {
         await initUsers()
         await initForms()
         await initVisibility()
+        return res.status(200).json("Готово!")
     }
-    return res.status(200).json("Готово!")
 })
 
 router.use('/item', isAuthUser, itemRouter)
