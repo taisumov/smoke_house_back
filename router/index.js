@@ -28,20 +28,25 @@ const {
     initAboutFirst,
     initUsers,
     initForms,
-    initVisibility
+    initVisibility, User
 } = require("../models");
 
-router.use('/init_db', async (req, res, next) => {
-    // await initHeader()
-    // await initAdvantages()
-    // await initTechs()
-    // await initDelivery()
-    // await initReasons()
-    // await initProd()
-    // await initAboutFirst()
-    // await initUsers()
-    // await initForms()
-    // await initVisibility()
+router.use('/init_db', isAuthUser, async (req, res, next) => {
+
+    const user = await User.findOne({where: {username: 'admin'}})
+
+    if (user) {
+        await initHeader()
+        await initAdvantages()
+        await initTechs()
+        await initDelivery()
+        await initReasons()
+        await initProd()
+        await initAboutFirst()
+        await initUsers()
+        await initForms()
+        await initVisibility()
+    }
     return res.status(200).json("Готово!")
 })
 
