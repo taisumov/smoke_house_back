@@ -4,15 +4,28 @@ on:
     branches:
       - main
 jobs:
-  build_and_pub:
+  build_pub_run_on_server:
     runs-on: [ubuntu-latest]
     env:
       TOKEN: ${{ secrets.DOCKER_TOKEN }}
       LOGIN: ${{ secrets.DOCKER_LOGIN }}
       IMAGE: ${{ secrets.DOCKER_IMAGE }}
+      SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
+      SSH_KNOWN_HOSTS: ${{secrets.SSH_KNOWN_HOSTS}}
+      SSH_KEY_PATH: ${{ github.workspace }}/../private.key
     steps:
       - name: Login to docker
         run: echo $TOKEN | docker login -u $LOGIN --password-stdin
-      - uses: actions/checkout@master
+      - uses: actions/checkout@main
       - name: Build & push image
         run: docker buildx build --push --build-arg LOGIN=$LOGIN -t $LOGIN/$IMAGE:1.0 -t $LOGIN/$IMAGE:latest .
+      - name: Wokr on server
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_PRIVATE_KEY" > $SSH_KEY_PATH
+          sudo chmod 600 $SSH_KEY_PATH
+          echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          ssh -i $SSH_KEY_PATH admin@5.63.158.109 "docker compose rm -s -f backend"
+          ssh -i $SSH_KEY_PATH admin@5.63.158.109 "docker rmi $LOGIN/$IMAGE"
+          ssh -i $SSH_KEY_PATH admin@5.63.158.109 "docker compose up -d backend"
+          ssh -i $SSH_KEY_PATH admin@5.63.158.109 "docker compose restart"
