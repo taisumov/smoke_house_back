@@ -26,6 +26,7 @@ jobs:
           mkdir -p ~/.ssh/
           echo $SSH_PRIVATE_KEY
           echo $SSH_PRIVATE_KEY > ../private.key
+          echo ../private.key
           sudo chmod 600 $SSH_KEY_PATH
           echo $SSH_KNOWN_HOSTS > ~/.ssh/known_hosts
           ssh -i $SSH_KEY_PATH $SSH_USER@$SSH_HOST "docker compose rm -s -f backend"
