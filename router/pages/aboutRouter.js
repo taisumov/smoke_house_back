@@ -25,7 +25,6 @@ const createResponse = async (model) => {
 class AboutController {
     async add(req, res, next) {
         try {
-            console.log(req.body)
             const arr = req.body
             await About.destroy({
                 where: {},

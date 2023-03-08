@@ -317,18 +317,13 @@ class itemController {
 
         let result = {}
         for (let item of items) {
-            console.log(item.category)
             if(item.category !== undefined) {
                 if (result[item.category] === undefined) {
                     result[item.category] = []
                 }
-                // console.log(item)
                 result[item.category].push(item)
             }
         }
-
-        console.log(result)
-
 
         return res.status(200).json(result)
     }

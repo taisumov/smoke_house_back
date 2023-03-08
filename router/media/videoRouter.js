@@ -41,7 +41,6 @@ class VideoController {
 
     async addMain(req, res, next) {
         try {
-            console.log(req.body)
             const {src} = req.body
             if (src === undefined)
                 return next(ApiError.forbidden('Введите значение источника видео'))
@@ -53,7 +52,6 @@ class VideoController {
                     else
                         return Video.create({name: 'main', src})
                 })
-            console.log(videoItem)
             return res.status(200).json({src: videoItem.src})
         }
         catch (e) {

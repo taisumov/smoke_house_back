@@ -12,7 +12,7 @@ class MediaController {
         try{
             let {file} = req.files
             let fileName = uuid.v4() + `.${file.name.split('.').at(-1)}`
-            await file.mv(path.resolve(__dirname, '..', '..', 'media', fileName))
+            await file.mv(path.resolve(__dirname, '..', '..', 'dbmedia', fileName))
             return res.status(200).json(fileName)
         } catch(e) {
             return next(ApiError.badRequest(e.message))
@@ -22,8 +22,7 @@ class MediaController {
     async deleteImage(req, res, next) {
         try {
             const {img} = req.body
-            console.log(img)
-            fs.unlinkSync(path.resolve(__dirname, '..', '..', 'media', img))
+            fs.unlinkSync(path.resolve(__dirname, '..', '..', 'dbmedia', img))
             return res.status(200).json('Удаление прошло успешно!')
         } catch (e) {
             return next(ApiError.badRequest(e.message))

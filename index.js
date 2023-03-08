@@ -3,15 +3,11 @@ require('dotenv').config()
 const express = require('express')
 const sequelize = require('./db')
 const cors = require('cors')
-const {initHeader, initAdvantages, initDelivery, initReasons, initProd, initAboutFirst, initTechs, initUsers, initForms,
-    initVisibility, User
-} = require("./models")
 const router = require('./router/index')
 const bodyParser = require('body-parser')
 const fileUpload = require('express-fileupload')
 const errorHandler = require('./middleware/errorHandling')
 const jwt = require("jsonwebtoken");
-const ApiError = require("./errors/ApiError");
 const {genAccessToken} = require("./middleware/auth");
 
 const app = express()
@@ -23,7 +19,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use('/api', router)
-app.use('/media', express.static('media'))
+app.use('/dbmedia', express.static('dbmedia'))
 app.post('/token', (req, res, next) => {
     if(req.method !== "OPTIONS") {
         try {

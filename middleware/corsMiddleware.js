@@ -13,7 +13,6 @@ module.exports = (req, res, next) => {
         "Origin,Authorization,X-Requested-With,Content-type,Accept"
     )
     res.setHeader("Access-Control-Allow-Credentials", true);
-    console.log(res)
     if ("OPTIONS" === req.method) {
         return res.sendStatus(200);
     }

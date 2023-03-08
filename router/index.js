@@ -61,6 +61,6 @@ router.use('/tech', isAuthUser, techRouter)
 router.use('/login', isAuthUser, loginRouter)
 router.use('/mail', isAuthUser, mailRouter)
 router.use('/delivery', isAuthUser, deliveryRouter)
-router.use('/media', isAuthUser, mediaRouter)
+router.use('/dbmedia', isAuthUser, mediaRouter)
 
 module.exports = router

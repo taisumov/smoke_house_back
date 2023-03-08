@@ -20,8 +20,6 @@ class MailController {
             htmlInLetter += `<p>${key}: ${value}</p>`
         }
 
-        console.log(htmlInLetter)
-
         const mailData = {
             from: 'islam.taisumov10@gmail.com',
             to: mailToSend,
