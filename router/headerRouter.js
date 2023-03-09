@@ -38,7 +38,7 @@ class HeaderController {
 
             let newHeaderInfo = await modelGetAll(Header)
 
-            if (isAllowed || isVisible) {
+            if (isAllowed || isVisible.visible) {
                 return res.status(200).json({...newHeaderInfo, visible: isVisible.visible})
             } else {
                 return res.status(200).json(undefined)
