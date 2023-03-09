@@ -13,7 +13,7 @@ class PromoController {
             let promoArray = await Promo.findAll()
             promoArray = promoArray.map(item => item.text)
             if (isAllowed || isVisible.visible) {
-                return res.status(200).json(promoArray)
+                return res.status(200).json({promo: promoArray, visible: isVisible.visible})
             } else {
                 return res.status(200).json(undefined)
             }
@@ -37,7 +37,7 @@ class PromoController {
             let promoArray = await Promo.findAll()
             promoArray = promoArray.map(item => item.text)
             await Visibility.update({visible}, {where: {name: 'promo'}})
-            return res.status(200).json(promoArray)
+            return res.status(200).json({promo: promoArray, visible})
         } catch (e) {
             return next(ApiError.badRequest(e.message))
         }
