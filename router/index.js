@@ -51,6 +51,7 @@ router.get('/init_db', async (req, res, next) => {
 })
 
 router.get('/ping', async (req, res) => res.status(200).json('pong'))
+router.get('/me', async (req, res) => res.status(200).json('you'))
 
 router.use('/item', isAuthUser, itemRouter)
 router.use('/header', isAuthUser, headerRouter)
