@@ -15,13 +15,15 @@ const modelGetAll = async (model) => {
 class HeaderController {
     async update(req, res, next){
         try {
-            const {title, description, image} = req.body
+            const {title, description, image, visible} = req.body
             if(title !== undefined)
                 await Header.update({data: title}, {where: {name: 'title'}})
             if(description !== undefined)
                 await Header.update({data: description}, {where: {name: 'description'}})
             if(image !== undefined)
                 await Header.update({data: image}, {where: {name: 'image'}})
+            if(visible !== undefined)
+                await Visibility.update({visible}, {where: {name: 'header'}})
             let newHeaderInfo = await modelGetAll(Header)
             return res.status(200).json(newHeaderInfo)
         } catch (e) {
