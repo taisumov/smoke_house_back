@@ -12,7 +12,7 @@ class PromoController {
 
             let promoArray = await Promo.findAll()
             promoArray = promoArray.map(item => item.text)
-            if (isAllowed || isVisible) {
+            if (isAllowed || isVisible.visible) {
                 return res.status(200).json(promoArray)
             } else {
                 return res.status(200).json(undefined)
@@ -24,7 +24,7 @@ class PromoController {
 
     async add(req, res, next){
         try {
-            const {text} = req.body
+            const {text, visible} = req.body
             await Promo.destroy({
                 where: {},
                 truncate: true
@@ -36,6 +36,7 @@ class PromoController {
             );
             let promoArray = await Promo.findAll()
             promoArray = promoArray.map(item => item.text)
+            await Visibility.update({visible}, {where: {name: 'promo'}})
             return res.status(200).json(promoArray)
         } catch (e) {
             return next(ApiError.badRequest(e.message))
