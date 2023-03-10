@@ -12,7 +12,7 @@ class AdvantageController {
             const isVisible = await Visibility.findOne({where: {name: 'advantages'}})
 
             let advantageArray = await Advantage.findAll()
-            if (isAllowed || isVisible) {
+            if (isAllowed || isVisible.visible) {
                 return res.status(200).json(advantageArray)
             } else {
                 return res.status(200).json(undefined)
@@ -24,7 +24,7 @@ class AdvantageController {
 
     async add(req, res, next) {
         try {
-            let {advantage} = req.body
+            let {advantage, visible} = req.body
             await Advantage.destroy({
                 where: {},
                 truncate: true
@@ -39,6 +39,7 @@ class AdvantageController {
                     })
                 })
             );
+            await Visibility.update({visible}, {where: {name: 'advantages'}})
             let advantageArray = await Advantage.findAll()
             return res.status(200).json(advantageArray)
         } catch (e) {
