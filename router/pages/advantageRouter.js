@@ -13,7 +13,7 @@ class AdvantageController {
 
             let advantageArray = await Advantage.findAll()
             if (isAllowed || isVisible.visible) {
-                return res.status(200).json(advantageArray)
+                return res.status(200).json({advantages: advantageArray, visible: isVisible})
             } else {
                 return res.status(200).json(undefined)
             }
@@ -39,9 +39,9 @@ class AdvantageController {
                     })
                 })
             );
-            await Visibility.update({visible}, {where: {name: 'advantages'}})
+            const isVisible = await Visibility.update({visible}, {where: {name: 'advantages'}})
             let advantageArray = await Advantage.findAll()
-            return res.status(200).json(advantageArray)
+            return res.status(200).json({advantages: advantageArray, visible: isVisible})
         } catch (e) {
             return next(ApiError.badRequest(e.message))
         }
