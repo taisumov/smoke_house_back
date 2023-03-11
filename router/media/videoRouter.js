@@ -28,8 +28,8 @@ class VideoController {
 
             const videoItem = await Video.findOne({where: {name: 'main'}})
 
-            if (isAllowed || (videoItem && isVisible)) {
-                return res.status(200).json(videoItem?.src)
+            if (isAllowed || (videoItem && isVisible.visible)) {
+                return res.status(200).json({video: videoItem?.src, visible: isVisible.visible})
             } else {
                 return res.status(200).json(undefined)
             }
@@ -41,7 +41,7 @@ class VideoController {
 
     async addMain(req, res, next) {
         try {
-            const {src} = req.body
+            const {src, visible} = req.body
             if (src === undefined)
                 return next(ApiError.forbidden('Введите значение источника видео'))
 
@@ -52,7 +52,9 @@ class VideoController {
                     else
                         return Video.create({name: 'main', src})
                 })
-            return res.status(200).json({src: videoItem.src})
+            const isVisible = Visibility.update({visible}, {where: {name: 'main_video'}})
+
+            return res.status(200).json({src: videoItem.src, visible: isVisible.visible})
         }
         catch (e) {
             return next(ApiError.badRequest(e.message))
