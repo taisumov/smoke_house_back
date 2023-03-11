@@ -8,7 +8,7 @@ const {authToken} = require("../../middleware/auth");
 class FormOrderController {
     async add(req, res, next) {
         try {
-            const arr = req.body
+            const {arr, visible} = req.body
             await FormOrder.destroy({
                 where: {},
                 truncate: true
@@ -17,7 +17,8 @@ class FormOrderController {
                 await FormOrder.create({name: form.name, is_email: form.is_email === undefined ? false : form.is_email})
             })
             let formOrderFields = await FormOrder.findAll()
-            return res.status(200).json(formOrderFields)
+            await Visibility.update({visible}, {where: {name: 'form_order'}})
+            return res.status(200).json({arr: formOrderFields, visible})
         } catch (e) {
             return next(ApiError.badRequest(e.message))
         }
@@ -37,10 +38,11 @@ class FormOrderController {
                 }
             })
 
-            if (isAllowed || isVisible) {
+            if (isAllowed || isVisible.visible) {
                 return res.status(200).json({
                     names: arrNames.filter(el => el != null),
-                    email: email_send
+                    email: email_send,
+                    visible: isVisible.visible
                 })
             } else {
                 return res.status(200).json(undefined)
